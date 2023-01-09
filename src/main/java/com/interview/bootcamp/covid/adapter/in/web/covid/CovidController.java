@@ -1,39 +1,30 @@
 package com.interview.bootcamp.covid.adapter.in.web.covid;
 
-import com.interview.bootcamp.covid.adapter.out.client.CovidRestClient;
+import com.interview.bootcamp.covid.application.port.in.CovidUseCase;
 import com.interview.bootcamp.covid.domain.DailyReport;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.function.Consumer;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
+import static com.interview.bootcamp.covid.common.utils.Constants.*;
 
 @RestController
 @RequestMapping("/covid")
+@Slf4j
 public class CovidController {
 
+    @Autowired
+    private CovidUseCase covidUseCase;
 
     @GetMapping
-    public Boolean hello(){
+    public DailyReport[] getDailyReport(){
 
-        Predicate<DailyReport> is = (a) -> a.date.equals("hoy");
+        log.info(String.format(CALLING_CLASS.concat(CALLING_METHOD),
+                "CovidController", "getDailyReport()"));
 
-        Supplier<Integer> supplier = () -> 1 + 1 ;
+        return covidUseCase.getDailyReport();
 
-        Consumer<DailyReport> consumer = (dr) -> System.out.println(dr.toString().concat(" <- Consumer"));
-
-        Integer suma = supplier.get();
-        System.out.println(suma);
-
-
-        DailyReport dailyReport = DailyReport.builder().date("antier").build();
-
-        consumer.accept(dailyReport);
-
-
-        return  is.test(DailyReport.builder().date("ayer").build());
     }
 }

@@ -1,12 +1,12 @@
 package com.interview.bootcamp.covid.adapter.out.client;
 
 import com.interview.bootcamp.covid.common.componets.RestClient;
+import com.interview.bootcamp.covid.common.utils.RestClientTemplate;
 import com.interview.bootcamp.covid.domain.DailyReport;
+import com.interview.bootcamp.covid.domain.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.List;
 
 import static com.interview.bootcamp.covid.common.utils.Constants.COVIDURL;
 
@@ -14,15 +14,23 @@ import static com.interview.bootcamp.covid.common.utils.Constants.COVIDURL;
 public class CovidRestClientImp implements CovidRestClient{
 
     @Autowired
-    private RestTemplate restTemplate;
+    private RestClientTemplate restClientTemplate;
 
     @Value("${daily.report.json}")
-    public String sufix;
+    private String daily;
+
+    @Value("${status.report.json}")
+    private String status;
 
     public DailyReport[] getDailyReport(){
 
-        return restTemplate.getForObject(COVIDURL.concat(sufix), DailyReport[].class);
+        return restClientTemplate.getForObject(COVIDURL.concat(daily), DailyReport[].class);
 
     }
+
+    public Status getStatus(){
+        return restClientTemplate.getForObject(COVIDURL.concat(status), Status.class);
+    }
+
 
 }

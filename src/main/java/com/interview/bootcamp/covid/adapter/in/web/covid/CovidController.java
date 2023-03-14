@@ -1,6 +1,9 @@
 package com.interview.bootcamp.covid.adapter.in.web.covid;
 
 import com.interview.bootcamp.covid.application.port.in.CovidUseCase;
+import com.interview.bootcamp.covid.common.utils.exceptions.CovidException;
+import com.interview.bootcamp.covid.common.utils.exceptions.ErrorInfo;
+import com.interview.bootcamp.covid.common.utils.exceptions.Handler;
 import com.interview.bootcamp.covid.domain.DailyReport;
 import com.interview.bootcamp.covid.domain.Status;
 import com.interview.bootcamp.covid.domain.dtos.DailyReportDTO;
@@ -11,10 +14,16 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
 
 import static com.interview.bootcamp.covid.common.utils.Constants.*;
 
@@ -70,7 +79,11 @@ public class CovidController {
         log.info(String.format(CALLING_CLASS.concat(CALLING_METHOD),
                 "CovidController", "getDailyReport()"));
 
-        return covidUseCase.getDailyReportByDate(date);
-
+        if(covidUseCase.getDailyReportByDate(date) != null){
+         return covidUseCase.getDailyReportByDate(date);
+        }
+throw new CovidException("Not Found");
     }
+
+
 }
